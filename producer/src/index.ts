@@ -12,7 +12,7 @@ const startServer = async () => {
       console.log(`Producer is listening at http://localhost:${PORT}`);
     });
 
-    await KafkaAdmin.createTopics([{ topic: TOPICS.RIDER_UPDATES, numPartitions: 2 }])
+    await KafkaAdmin.createTopics([{ topic: TOPICS.RIDER_UPDATES, numPartitions: 2, replicationFactor: 2 }])
 
     const shutdown = async () => {
       console.log("Shutting down gracefully...");

@@ -3,6 +3,7 @@ import { kafka } from '../../config/kafka.config';
 interface ITopic {
   topic: string;
   numPartitions: number;
+  replicationFactor: number;
 }
 
 export class KafkaAdmin {
