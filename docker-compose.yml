@@ -59,6 +59,27 @@ services:
       KAFKA_ELECTION_ENABLE: true
       KAFKA_ZOOKEEPER_SESSION_TIMEOUT_MS: 60000
   
+  kafka-broker-3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-broker-3
+    hostname: kafka-broker-3
+    ports:
+      - "39092:39092"
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-1:2181,zookeeper-2:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:9092,PLAINTEXT_INTERNAL://localhost:39092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_LOG_RETENTION_HOURS: 72
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_LOG_RETENTION_BYTES: 10000000000
+      KAFKA_ELECTION_ENABLE: true
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT_MS: 60000
+  
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
@@ -67,7 +88,8 @@ services:
     depends_on:
       - kafka-broker-1
       - kafka-broker-2
+      - kafka-broker-3
     environment:
       KAFKA_CLUSTERS_0_NAME: "local"
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka-broker-1:9092,kafka-broker-2:9092"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
       KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper-1:2181,zookeeper-2:2181"
